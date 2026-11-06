@@ -1,153 +1,125 @@
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { List, X, Download, ArrowUpRight, SealCheck } from "@phosphor-icons/react";
-import { NAV_ITEMS } from "../data";
-import type { SectionId } from "../types";
+import { Globe, List, X, Phone } from "@phosphor-icons/react";
+import { useLang, CONTENT, type Lang } from "../data/content";
 
-const GOLD = "#D4AF37";
-
-export default function Navbar({ onDeck }: { onDeck: () => void }) {
+export default function Navbar({ onScroll }: { onScroll: (href: string) => void }) {
+  const { lang, setLang } = useLang();
+  const c = CONTENT[lang];
   const [scrolled, setScrolled] = useState(false);
-  const [open, setOpen] = useState(false);
-  const [active, setActive] = useState<SectionId>("overview");
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   useEffect(() => {
-    const onScroll = () => {
-      setScrolled(window.scrollY > 24);
-      let current: SectionId = "overview";
-      for (const item of NAV_ITEMS) {
-        const el = document.getElementById(item.id);
-        if (el && el.getBoundingClientRect().top <= 120) current = item.id;
-      }
-      setActive(current);
-    };
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    const fn = () => setScrolled(window.scrollY > 40);
+    window.addEventListener("scroll", fn, { passive: true });
+    return () => window.removeEventListener("scroll", fn);
   }, []);
 
-  const go = (id: SectionId) => {
-    setOpen(false);
-    document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
-  };
+  const toggleLang = () => setLang(lang === "en" ? "fr" : "en");
 
   return (
     <header
-      className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         scrolled
-          ? "border-b border-white/10 bg-[#0B0F17]/80 backdrop-blur-xl"
-          : "border-b border-transparent bg-transparent"
+          ? "bg-[#0B0F19]/95 backdrop-blur-md border-b border-[#D4AF37]/10 shadow-lg shadow-black/20"
+          : "bg-transparent"
       }`}
     >
-      <div className="mx-auto flex h-[72px] max-w-7xl items-center justify-between px-5 lg:px-8">
-        <button onClick={() => go("overview")} className="flex items-center gap-3">
-          <span
-            className="grid h-9 w-9 place-items-center rounded-md font-bold text-[#0B0F17]"
-            style={{ background: `linear-gradient(135deg, ${GOLD}, #F59E0B)` }}
-          >
-            A
-          </span>
-          <span className="text-lg font-semibold tracking-tight text-white">
-            Ageno<span style={{ color: GOLD }}> Gold</span>
-          </span>
-        </button>
-
-        <nav className="hidden items-center gap-1 lg:flex">
-          {NAV_ITEMS.map((item) => (
-            <button
-              key={item.id}
-              onClick={() => go(item.id)}
-              className={`relative rounded-md px-3.5 py-2 text-sm font-medium transition-colors ${
-                active === item.id ? "text-white" : "text-slate-300 hover:text-white"
-              }`}
-            >
-              {active === item.id && (
-                <motion.span
-                  layoutId="nav-pill"
-                  className="absolute inset-0 rounded-md bg-white/10"
-                  transition={{ type: "spring", stiffness: 380, damping: 30 }}
-                />
-              )}
-              <span className="relative">{item.label}</span>
-            </button>
-          ))}
-        </nav>
-
-        <div className="hidden items-center gap-4 lg:flex">
-          <span className="flex items-center gap-1.5 text-xs font-medium text-emerald-400">
-            <SealCheck weight="fill" size={16} />
-            NYSE / TSX Verified Tier-1 Assets
-          </span>
-          <button
-            onClick={onDeck}
-            className="group flex items-center gap-2 rounded-md px-4 py-2 text-sm font-semibold text-[#0B0F17] transition-transform active:scale-[0.98]"
-            style={{ background: GOLD }}
-          >
-            <Download weight="bold" size={16} />
-            Investor Deck
-            <ArrowUpRight
-              weight="bold"
-              size={16}
-              className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
-            />
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="flex h-16 sm:h-20 items-center justify-between gap-4">
+          {/* Logo */}
+          <button onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })} className="flex items-center gap-2 group">
+            <div className="relative w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-gradient-to-br from-[#D4AF37] to-[#9A6024] flex items-center justify-center shadow-lg shadow-[#D4AF37]/20">
+              <span className="text-[#0B0F19] font-black text-base sm:text-lg tracking-tighter">A</span>
+            </div>
+            <div className="hidden sm:flex flex-col leading-none">
+              <span className="text-sm font-bold tracking-wider text-[#F8FAFC] group-hover:text-[#D4AF37] transition-colors">
+                AGENO
+              </span>
+              <span className="text-[10px] tracking-[0.2em] text-[#D4AF37]/70 uppercase font-medium">
+                Mining Co.
+              </span>
+            </div>
           </button>
-        </div>
 
-        <button
-          onClick={() => setOpen(true)}
-          className="grid h-10 w-10 place-items-center rounded-md border border-white/15 text-white lg:hidden"
-          aria-label="Open menu"
-        >
-          <List size={22} />
-        </button>
+          {/* Desktop Nav */}
+          <nav className="hidden lg:flex items-center gap-1">
+            {c.nav.links.map((link) => (
+              <button
+                key={link.href}
+                onClick={() => onScroll(link.href)}
+                className="px-3 py-2 text-[13px] font-medium text-[#F8FAFC]/70 hover:text-[#D4AF37] transition-colors rounded-md hover:bg-white/[0.04]"
+              >
+                {link.label}
+              </button>
+            ))}
+          </nav>
+
+          {/* Right Actions */}
+          <div className="flex items-center gap-2 sm:gap-3">
+            {/* Language Switcher */}
+            <button
+              onClick={toggleLang}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-[#D4AF37]/30 text-[12px] font-semibold text-[#D4AF37] hover:bg-[#D4AF37]/10 transition-all"
+              aria-label="Toggle language"
+            >
+              <Globe size={14} weight="bold" />
+              {lang === "en" ? "FR" : "EN"}
+            </button>
+
+            {/* CTA Desktop */}
+            <button
+              onClick={() => onScroll("#contact")}
+              className="hidden md:inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-gradient-to-r from-[#D4AF37] to-[#F59E0B] text-[#0B0F19] text-[13px] font-bold hover:shadow-lg hover:shadow-[#D4AF37]/25 transition-all active:scale-[0.97]"
+            >
+              <Phone size={14} weight="fill" />
+              {c.nav.inquiry}
+            </button>
+
+            {/* Mobile Hamburger */}
+            <button
+              onClick={() => setMobileOpen(!mobileOpen)}
+              className="lg:hidden p-2 text-[#F8FAFC]/70 hover:text-[#D4AF37] transition-colors"
+              aria-label="Menu"
+            >
+              {mobileOpen ? <X size={24} /> : <List size={24} />}
+            </button>
+          </div>
+        </div>
       </div>
 
+      {/* Mobile Menu */}
       <AnimatePresence>
-        {open && (
+        {mobileOpen && (
           <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 bg-[#0B0F17]/95 backdrop-blur-xl lg:hidden"
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.25 }}
+            className="lg:hidden bg-[#0B0F19]/98 backdrop-blur-xl border-t border-[#D4AF37]/10 overflow-hidden"
           >
-            <div className="flex h-[72px] items-center justify-between px-5">
-              <span className="text-lg font-semibold text-white">
-                Ageno<span style={{ color: GOLD }}> Gold</span>
-              </span>
-              <button
-                onClick={() => setOpen(false)}
-                className="grid h-10 w-10 place-items-center rounded-md border border-white/15 text-white"
-                aria-label="Close menu"
-              >
-                <X size={22} />
-              </button>
-            </div>
-            <nav className="flex flex-col gap-1 px-5 pt-4">
-              {NAV_ITEMS.map((item, i) => (
+            <div className="px-4 py-4 space-y-1">
+              {c.nav.links.map((link, i) => (
                 <motion.button
-                  key={item.id}
-                  initial={{ opacity: 0, x: -12 }}
+                  key={link.href}
+                  initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.04 * i }}
-                  onClick={() => go(item.id)}
-                  className="flex items-center justify-between border-b border-white/5 py-4 text-left text-lg font-medium text-slate-100"
+                  transition={{ delay: i * 0.05 }}
+                  onClick={() => { onScroll(link.href); setMobileOpen(false); }}
+                  className="block w-full text-left px-4 py-3 text-[15px] font-medium text-[#F8FAFC]/80 hover:text-[#D4AF37] hover:bg-[#D4AF37]/5 rounded-lg transition-colors"
                 >
-                  {item.label}
-                  <ArrowUpRight size={18} style={{ color: GOLD }} />
+                  {link.label}
                 </motion.button>
               ))}
-              <button
-                onClick={() => {
-                  setOpen(false);
-                  onDeck();
-                }}
-                className="mt-6 flex items-center justify-center gap-2 rounded-md py-3.5 font-semibold text-[#0B0F17]"
-                style={{ background: GOLD }}
-              >
-                <Download weight="bold" size={18} />
-                Download Investor Deck
-              </button>
-            </nav>
+              <div className="pt-3 border-t border-white/10">
+                <button
+                  onClick={() => { onScroll("#contact"); setMobileOpen(false); }}
+                  className="w-full py-3 rounded-lg bg-gradient-to-r from-[#D4AF37] to-[#F59E0B] text-[#0B0F19] font-bold text-sm"
+                >
+                  {c.nav.inquiry}
+                </button>
+              </div>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
