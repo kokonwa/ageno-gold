@@ -22,7 +22,7 @@ jobs:
         with:
           node-version: 22
           cache: npm
-      - run: npm ci
+      - run: npm install
       - uses: actions/configure-pages@v5
         id: pages
       - run: npm run build -- --base "${{ steps.pages.outputs.base_path }}/"
