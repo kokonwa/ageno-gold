@@ -24,22 +24,9 @@ export default function ContactAndFooter() {
   };
 
   const handleSubmit = (ev: React.FormEvent) => {
-    ev.preventDefault();
     const e = validate();
     setErrors(e);
-    if (Object.keys(e).length > 0) return;
-
-    const { labels, email } = c.contact;
-    const subject = `${lang === "en" ? "Inquiry" : "Demande"} — ${form.dept}`;
-    const body = [
-      `${labels.name}: ${form.name.trim()}`,
-      `${labels.email}: ${form.email.trim()}`,
-      `${labels.org}: ${form.org.trim()}`,
-      `${labels.dept}: ${form.dept}`,
-      "",
-      form.msg.trim(),
-    ].join("\r\n");
-    window.location.href = `mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    if (Object.keys(e).length > 0) ev.preventDefault();
   };
 
   const inputCls = (field: string) =>
@@ -156,14 +143,18 @@ export default function ContactAndFooter() {
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5 }}
+              action={`https://formsubmit.co/${c.contact.email}`}
+              method="POST"
               onSubmit={handleSubmit}
               className="lg:col-span-3 space-y-4"
             >
+              <input type="hidden" name="_subject" value="New inquiry from Ageno Mining website" />
               <div className="grid sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-[12px] font-semibold text-[#F8FAFC]/60 mb-1.5">{c.contact.labels.name} *</label>
                   <input
                     type="text"
+                    name="name"
                     value={form.name}
                     onChange={(e) => setForm({ ...form, name: e.target.value })}
                     className={inputCls("name")}
@@ -174,6 +165,7 @@ export default function ContactAndFooter() {
                   <label className="block text-[12px] font-semibold text-[#F8FAFC]/60 mb-1.5">{c.contact.labels.email} *</label>
                   <input
                     type="email"
+                    name="email"
                     value={form.email}
                     onChange={(e) => setForm({ ...form, email: e.target.value })}
                     className={inputCls("email")}
@@ -187,6 +179,7 @@ export default function ContactAndFooter() {
                   <label className="block text-[12px] font-semibold text-[#F8FAFC]/60 mb-1.5">{c.contact.labels.org}</label>
                   <input
                     type="text"
+                    name="organization"
                     value={form.org}
                     onChange={(e) => setForm({ ...form, org: e.target.value })}
                     className={inputCls("org")}
@@ -195,6 +188,7 @@ export default function ContactAndFooter() {
                 <div>
                   <label className="block text-[12px] font-semibold text-[#F8FAFC]/60 mb-1.5">{c.contact.labels.dept}</label>
                   <select
+                    name="department"
                     value={form.dept}
                     onChange={(e) => setForm({ ...form, dept: e.target.value })}
                     className={inputCls("dept")}
@@ -209,6 +203,7 @@ export default function ContactAndFooter() {
               <div>
                 <label className="block text-[12px] font-semibold text-[#F8FAFC]/60 mb-1.5">{c.contact.labels.msg} *</label>
                 <textarea
+                  name="message"
                   rows={5}
                   value={form.msg}
                   onChange={(e) => setForm({ ...form, msg: e.target.value })}
