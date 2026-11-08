@@ -12,6 +12,7 @@ export default function ContactAndFooter() {
 
   const [form, setForm] = useState({ name: "", email: "", org: "", dept: c.contact.depts[0], msg: "" });
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [submission, setSubmission] = useState<"idle" | "sending" | "sent" | "error">("idle");
 
   const validate = () => {
     const e: Record<string, string> = {};
@@ -23,10 +24,37 @@ export default function ContactAndFooter() {
     return e;
   };
 
-  const handleSubmit = (ev: React.FormEvent) => {
+  const handleSubmit = async (ev: React.FormEvent<HTMLFormElement>) => {
+    ev.preventDefault();
+    if (submission === "sending") return;
+
+    setSubmission("idle");
     const e = validate();
     setErrors(e);
-    if (Object.keys(e).length > 0) ev.preventDefault();
+    if (Object.keys(e).length > 0) return;
+
+    const data = Object.fromEntries(new FormData(ev.currentTarget));
+    setSubmission("sending");
+
+    try {
+      const response = await fetch(`https://formsubmit.co/ajax/${c.contact.email}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify(data),
+      });
+      const result = await response.json();
+      if (!response.ok || (result.success !== true && result.success !== "true")) {
+        setSubmission("error");
+        return;
+      }
+
+      setSubmission("sent");
+      setForm((current) => current === form
+        ? { name: "", email: "", org: "", dept: c.contact.depts[0], msg: "" }
+        : current);
+    } catch {
+      setSubmission("error");
+    }
   };
 
   const inputCls = (field: string) =>
@@ -143,8 +171,6 @@ export default function ContactAndFooter() {
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5 }}
-              action={`https://formsubmit.co/${c.contact.email}`}
-              method="POST"
               onSubmit={handleSubmit}
               className="lg:col-span-3 space-y-4"
             >
@@ -216,10 +242,15 @@ export default function ContactAndFooter() {
 
               <button
                 type="submit"
+                disabled={submission === "sending"}
                 className="w-full sm:w-auto px-8 py-3.5 rounded-lg bg-gradient-to-r from-[#D4AF37] to-[#F59E0B] text-[#0B0F19] font-bold text-sm hover:shadow-lg hover:shadow-[#D4AF37]/25 transition-all active:scale-[0.97]"
               >
-                {c.contact.submit}
+                {submission === "sending" ? (lang === "en" ? "Sending…" : "Envoi…") : c.contact.submit}
               </button>
+              <div role="status" className="text-sm text-[#F8FAFC]/75">
+                {submission === "sent" && (lang === "en" ? "Thank you. Your inquiry was submitted." : "Merci. Votre demande a été envoyée.")}
+                {submission === "error" && (lang === "en" ? "We couldn’t submit your inquiry. Please try again or email us directly." : "Votre demande n’a pas pu être envoyée. Réessayez ou contactez-nous par e-mail.")}
+              </div>
             </motion.form>
           </div>
         </div>
