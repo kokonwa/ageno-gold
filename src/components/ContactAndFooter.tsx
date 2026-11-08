@@ -12,7 +12,6 @@ export default function ContactAndFooter() {
 
   const [form, setForm] = useState({ name: "", email: "", org: "", dept: c.contact.depts[0], msg: "" });
   const [errors, setErrors] = useState<Record<string, string>>({});
-  const [submitting, setSubmitting] = useState(false);
 
   const validate = () => {
     const e: Record<string, string> = {};
@@ -30,12 +29,17 @@ export default function ContactAndFooter() {
     setErrors(e);
     if (Object.keys(e).length > 0) return;
 
-    setSubmitting(true);
-    setTimeout(() => {
-      setSubmitting(false);
-      toast.success(c.contact.success);
-      setForm({ name: "", email: "", org: "", dept: c.contact.depts[0], msg: "" });
-    }, 1200);
+    const { labels, email } = c.contact;
+    const subject = `${lang === "en" ? "Inquiry" : "Demande"} — ${form.dept}`;
+    const body = [
+      `${labels.name}: ${form.name.trim()}`,
+      `${labels.email}: ${form.email.trim()}`,
+      `${labels.org}: ${form.org.trim()}`,
+      `${labels.dept}: ${form.dept}`,
+      "",
+      form.msg.trim(),
+    ].join("\r\n");
+    window.location.href = `mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
   };
 
   const inputCls = (field: string) =>
@@ -215,12 +219,9 @@ export default function ContactAndFooter() {
 
               <button
                 type="submit"
-                disabled={submitting}
-                className="w-full sm:w-auto px-8 py-3.5 rounded-lg bg-gradient-to-r from-[#D4AF37] to-[#F59E0B] text-[#0B0F19] font-bold text-sm hover:shadow-lg hover:shadow-[#D4AF37]/25 transition-all active:scale-[0.97] disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full sm:w-auto px-8 py-3.5 rounded-lg bg-gradient-to-r from-[#D4AF37] to-[#F59E0B] text-[#0B0F19] font-bold text-sm hover:shadow-lg hover:shadow-[#D4AF37]/25 transition-all active:scale-[0.97]"
               >
-                {submitting
-                  ? (lang === "en" ? "Sending..." : "Envoi en cours...")
-                  : c.contact.submit}
+                {c.contact.submit}
               </button>
             </motion.form>
           </div>

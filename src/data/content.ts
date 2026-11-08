@@ -88,7 +88,6 @@ export interface ContentData {
     labels: { name: string; email: string; org: string; dept: string; msg: string };
     depts: string[];
     submit: string;
-    success: string;
     phone: string;
     phoneSecondary: string;
     email: string;
@@ -265,11 +264,10 @@ const en: ContentData = {
     subtitle: "For inquiries related to procurement, investment, concessions, careers, or press.",
     labels: { name: "Full Name", email: "Email Address", org: "Organization / Institution", dept: "Department", msg: "Your Message" },
     depts: ["Procurement", "Investor Relations", "Concession Inquiries", "Careers", "Press"],
-    submit: "Send Inquiry",
-    success: "Your inquiry has been received. Our team will respond within 48 hours.",
+    submit: "Open email draft",
     phone: "+243 819 702 362",
     phoneSecondary: "+256 778 775 060",
-    email: "contact@agenominingcompany.com",
+    email: "agenominingcompany@gmail.com",
     address: "Boulevard du 30 Juin, Gombe, Kinshasa, DR Congo",
     bases: "Operational Bases: Watsa (Haut-Uele) & Bunia/Mambasa (Ituri)",
   },
@@ -443,11 +441,10 @@ const fr: ContentData = {
     subtitle: "Pour les demandes relatives aux approvisionnements, investissements, concessions, carrières ou presse.",
     labels: { name: "Nom Complet", email: "Adresse Email", org: "Organisation / Institution", dept: "Département", msg: "Votre Message" },
     depts: ["Approvisionnement", "Relations Investisseurs", "Demandes de Concessions", "Carrières", "Presse"],
-    submit: "Envoyer la Demande",
-    success: "Votre demande a été reçue. Notre équipe répondra dans les 48 heures.",
+    submit: "Ouvrir le brouillon",
     phone: "+243 819 702 362",
     phoneSecondary: "+256 778 775 060",
-    email: "contact@agenominingcompany.com",
+    email: "agenominingcompany@gmail.com",
     address: "Boulevard du 30 Juin, Gombe, Kinshasa, RD Congo",
     bases: "Bases Opérationnelles : Watsa (Haut-Uele) & Bunia/Mambasa (Ituri)",
   },
