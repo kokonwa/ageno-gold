@@ -11,7 +11,7 @@ export const useLang = () => useContext(LangContext);
 
 export const IMG = {
   hero: "https://dala-prod-public-storage.s3.eu-west-1.amazonaws.com/generated-images/560f121e-e8da-4de2-a8e6-798242cb7af6/hero-mining-6a296dfa-1794000222384.webp",
-  director: "https://dala-prod-public-storage.s3.eu-west-1.amazonaws.com/generated-images/560f121e-e8da-4de2-a8e6-798242cb7af6/director-portrait-3a8745ec-1794000223021.webp",
+  director: `${import.meta.env.BASE_URL}ageno-jacque.jpg`,
   newsOps: "https://dala-prod-public-storage.s3.eu-west-1.amazonaws.com/generated-images/560f121e-e8da-4de2-a8e6-798242cb7af6/news-operations-2bba2c29-1794000222680.webp",
   newsEsg: "https://dala-prod-public-storage.s3.eu-west-1.amazonaws.com/generated-images/560f121e-e8da-4de2-a8e6-798242cb7af6/news-esg-3848ac1a-1794000222982.webp",
   newsTech: "https://dala-prod-public-storage.s3.eu-west-1.amazonaws.com/generated-images/560f121e-e8da-4de2-a8e6-798242cb7af6/news-technology-357b6b17-1794000223385.webp",
@@ -182,9 +182,9 @@ const en: ContentData = {
   },
   leadership: {
     title: "Executive Leadership",
-    name: "Eng. Patrick Ageno",
+    name: "Eng. Ageno Jacque",
     role: "Founder & Managing Director",
-    bio: "A mining engineer with over 20 years of experience across Central and East Africa, Patrick founded Ageno Mining to demonstrate that responsible extraction and community prosperity are inseparable. He holds a degree in Mining Engineering from the University of Kinshasa and has led exploration programs in the Kilo-Moto and Mongbwalu goldfields.",
+    bio: "A mining engineer with over 20 years of experience across Central and East Africa, Ageno Jacquefounded Ageno Mining to demonstrate that responsible extraction and community prosperity are inseparable. He holds a degree in Mining Engineering from the University of Kinshasa and has led exploration programs in the Kilo-Moto and Mongbwalu goldfields.",
     vision: "Our vision is to build a world-class Congolese mining enterprise that adds value at every stage, from the pit to the refinery, while setting new standards for environmental and social governance in the DRC.",
     focus: ["Transparent ESG Governance", "Technology-Driven Yield", "Local Workforce Development"],
   },
@@ -360,9 +360,9 @@ const fr: ContentData = {
   },
   leadership: {
     title: "Direction Exécutive",
-    name: "Ing. Patrick Ageno",
+    name: "Eng. Ageno Jacque",
     role: "Fondateur & Directeur Général",
-    bio: "Ingénieur minier avec plus de 20 ans d'expérience en Afrique centrale et orientale, Patrick a fondé Ageno Mining pour démontrer que l'extraction responsable et la prospérité communautaire sont indissociables. Il est titulaire d'un diplôme en Génie Minier de l'Université de Kinshasa et a dirigé des programmes d'exploration dans les champs aurifères de Kilo-Moto et Mongbwalu.",
+    bio: "Ingénieur minier avec plus de 20 ans d'expérience en Afrique centrale et orientale, Ageno Jacquea fondé Ageno Mining pour démontrer que l'extraction responsable et la prospérité communautaire sont indissociables. Il est titulaire d'un diplôme en Génie Minier de l'Université de Kinshasa et a dirigé des programmes d'exploration dans les champs aurifères de Kilo-Moto et Mongbwalu.",
     vision: "Notre vision est de bâtir une entreprise minière congolaise de classe mondiale qui ajoute de la valeur à chaque étape, de la fosse à la raffinerie, tout en établissant de nouveaux standards de gouvernance environnementale et sociale en RDC.",
     focus: ["Gouvernance ESG Transparente", "Rendement par la Technologie", "Développement de la Main-d'œuvre Locale"],
   },
