@@ -149,6 +149,8 @@ export default function ContactAndFooter() {
               className="lg:col-span-3 space-y-4"
             >
               <input type="hidden" name="_subject" value="New inquiry from Ageno Mining website" />
+              <input type="hidden" name="_captcha" value="false" />
+              <input type="text" name="_honey" hidden tabIndex={-1} autoComplete="off" />
               <div className="grid sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-[12px] font-semibold text-[#F8FAFC]/60 mb-1.5">{c.contact.labels.name} *</label>
